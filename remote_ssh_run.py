@@ -1,5 +1,6 @@
 import paramiko
 import getpass
+import logging
 
 # Список удаленных серверов
 servers = [
@@ -15,6 +16,10 @@ commands = [
     'script_backup.sh &',
      'python3 my_py_script.py'
 ]
+
+
+# Определение формата вывода в лог
+logging.basicConfig(filename='logfile.log', level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 # Функция для выполнения команд на удаленном сервере
 def execute_command(server, command):
@@ -37,9 +42,17 @@ def execute_command(server, command):
     print('\n------------------------------------------------------------------')
     print('On HOST                    -   {}'.format(server['host']))
     print('Result of executed command   -   {} \n'.format(command))
+    # вывод в лог
+    logging.info('\n------------------------------------------------------------------')
+    logging.info('On HOST                    -   {}'.format(server['host']))
+    logging.info('Result of executed command   -   {}'.format(command))
+    
     for line in stdout:
         print(line.strip('\n'))
+        logging.info(line.strip('\n'))
 
+    logging.info('\n------------------------------------------------------------------')
+    
     # Закрытие подключения к серверу
     client.close()
 
