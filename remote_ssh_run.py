@@ -74,7 +74,7 @@ def execute_command(server, command):
         client.close()
     except Exception as e:
         # Запись о неудачном подключении в отдельный файл лога ошибок
-        error_message = f"Failed to connect to {server['host']['info']} {server['host']['comment']}: {str(e)}"
+        error_message = f"     {server['host']['info']} {server['host']['comment']} - Failed connect. Error : {str(e)}"
         print(error_message)
         error_logging.error(error_message)
 
