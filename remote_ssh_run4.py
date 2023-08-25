@@ -81,3 +81,12 @@ commands = [
 for server in list_hosts:
     for command in commands:
         execute_command(server, command)
+
+
+
+#############################################3
+
+Traceback (most recent call last):
+  File "D:/DEV/Project/Remote_SSH/Remote_SSH_Run5.py", line 35, in <module>
+    server_info, comment = line.strip().split('#', 1)
+ValueError: not enough values to unpack (expected 2, got 1)
