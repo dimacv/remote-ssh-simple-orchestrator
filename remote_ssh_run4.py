@@ -2,13 +2,18 @@ import paramiko
 import getpass
 import logging
 
+# Получение текущей даты и времени
+current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
 # Определение формата вывода в основной лог
-logging.basicConfig(filename='log_file.log', level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+log_file_name = f'log_file_{current_datetime}.log'
+logging.basicConfig(filename=log_file_name, level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 # Определение формата вывода в лог ошибок
+error_log_file_name = f'errorlog_{current_datetime}.log'
 error_logging = logging.getLogger('error_logger')
 error_logging.setLevel(logging.ERROR)
-error_log_handler = logging.FileHandler('errorlog.log')
+error_log_handler = logging.FileHandler(error_log_file_name)
 error_log_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))
 error_logging.addHandler(error_log_handler)
 
