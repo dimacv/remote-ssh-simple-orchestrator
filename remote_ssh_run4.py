@@ -13,8 +13,16 @@ error_log_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(me
 error_logging.addHandler(error_log_handler)
 
 # Чтение списка удаленных серверов из файла
+#with open('server_list.txt', 'r') as file:
+#    list_hosts = [line.strip() for line in file.readlines()]
+
+# Чтение списка удаленных серверов из файла
+list_hosts = []
 with open('server_list.txt', 'r') as file:
-    list_hosts = [line.strip() for line in file.readlines()]
+    for line in file:
+        server_info = line.strip().split('#', 1)[0].strip()
+        if server_info:
+            list_hosts.append(server_info)
 
 # Остальной код остается без изменений...
 # ... (оставьте все, что было после чтения списка серверов)
