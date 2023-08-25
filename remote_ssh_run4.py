@@ -22,10 +22,14 @@ error_logging.addHandler(error_log_handler)
 list_hosts = []
 with open('server_list.txt', 'r') as file:
     for line in file:
-        server_info, comment = line.strip().split('#', 1)
+        server_info, *comment = line.strip().split('#', 1)
         server_info = server_info.strip()
+        comment = comment[0].strip() if comment else ""
         if server_info:
-            list_hosts.append({'info': server_info, 'comment': comment.strip()})
+            list_hosts.append({'info': server_info, 'comment': comment})
+
+# Остальной код остается без изменений...
+# ... (оставьте все, что было после чтения списка серверов)
 
 # Функция для выполнения команд на удаленном сервере
 def execute_command(server, command):
@@ -81,12 +85,3 @@ commands = [
 for server in list_hosts:
     for command in commands:
         execute_command(server, command)
-
-
-
-#############################################3
-
-Traceback (most recent call last):
-  File "D:/DEV/Project/Remote_SSH/Remote_SSH_Run5.py", line 35, in <module>
-    server_info, comment = line.strip().split('#', 1)
-ValueError: not enough values to unpack (expected 2, got 1)
