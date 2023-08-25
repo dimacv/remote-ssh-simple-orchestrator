@@ -27,18 +27,57 @@ with open('server_list.txt', 'r') as file:
         if server_info:
             list_hosts.append({'info': server_info, 'comment': comment.strip()})
 
-# Остальной код остается без изменений...
-# ... (оставьте все, что было после чтения списка серверов)
-
 # Функция для выполнения команд на удаленном сервере
 def execute_command(server, command):
     try:
-        # Тот же код функции, что и ранее...
+        print(f"\n------------------------------------------------------------------")
+        print(f"On HOST                    -   {server['info']} ({server['comment']})")
+        print(f"Result of executed command   -   {command}\n")
+        logging.info("\n------------------------------------------------------------------")
+        logging.info(f"On HOST                    -   {server['info']} ({server['comment']})")
+        
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+        # Подключение к серверу
+        client.connect(
+            server['info'],
+            username=server['username'],
+            key_filename=server['key_path'],
+            passphrase=ssh_key_passphrase,
+            timeout=10
+        )
+
+        # Выполнение команды
+        stdin, stdout, stderr = client.exec_command(command)
+
+        logging.info(f"Result of executed command   -   {command}")
+
+        # Вывод результата
+        for line in stdout:
+            print(line.strip('\n'))
+            logging.info(line.strip('\n'))
+
+        logging.info("\n------------------------------------------------------------------")
+
+        # Закрытие подключения к серверу
+        client.close()
     except Exception as e:
         # Запись о неудачном подключении в отдельный файл лога ошибок
         error_message = f"Failed to connect to {server['info']}: {str(e)}"
         print(error_message)
         error_logging.error(error_message)
 
-# Остальной код остается без изменений...
-# ... (оставьте все, что было после функции execute_command)
+ssh_key_passphrase = getpass.getpass("Введите пароль для ssh ключа: ")
+
+# Список команд, которые необходимо выполнить
+commands = [
+    'mount /nfs_shares/backup_os', 
+    '/nfs_shares/backup_os/scripts/add_scan_unix.sh', 
+    'lsuser scan_unix'
+]
+
+# Перебираем все сервера и выполняем на них команды
+for server in list_hosts:
+    for command in commands:
+        execute_command(server, command)
